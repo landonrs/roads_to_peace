@@ -7,37 +7,13 @@ var dbFacade = require('./data_layer/dbFacade.js');
 var PORT = process.env.PORT || 3000;
 
 app
-.use(express.static(path.join(__dirname)))
+.use(express.static(path.join(__dirname, 'public')))
 .use(bodyParser.json())
 .get('/projects/:id', dbFacade.getProjects)
 .get('/users/:id', dbFacade.getUserDonations)
 .post('/donate', dbFacade.addDonation)
-.put('/products/:id', function(req, res){
-    var id = req.params.id;
-    var newName = req.body.newName;
-
-    var found = false;
-
-    products.forEach(function(product, index){
-        if (!found && product.id === Number(id)){
-            product.name = newName;
-        }
-    });
-
-    res.send("successful update!");
-})
-.delete('/products/:id', function(req, res){
-    var id = req.params.id;
-
-    var found = false;
-
-    products.forEach(function(product, index){
-        if (!found && product.id === Number(id)){
-            products.splice(index, 1);
-        }
-        res.send("successful deletion");
-    });
-
+.get('/', (req, res) =>{
+    res.redirect('/roadsToPeace.html');
 })
 .listen(PORT, function() {
     console.log("server listening on port " + PORT);
