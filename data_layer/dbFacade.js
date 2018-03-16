@@ -63,7 +63,7 @@ function addDonation(req, res){
         var donation = {
             userID: userID,
             projectID: projectID,
-            amount: amount
+            amount: Math.floor(amount)
         }
 
         insertDonation(donation, function(err, updateDetails){
@@ -77,7 +77,7 @@ function insertDonation(donation, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        ssl: true,
+        //ssl: true,
       });
     client.connect(function(err) {
 		if (err) {
@@ -86,7 +86,7 @@ function insertDonation(donation, callback){
 			callback(err, null);
 		}
         //first insert the donation into the DB
-        var sql = "INSERT INTO PROJECT_CONTRIBUTORS (PROJECT_ID, USER_ID, DONATION_AMOUNT) VALUES($1,$2,$3)";
+        var sql = "INSERT INTO PROJECT_CONTRIBUTORS (PROJECT_ID, USER_ID, DONATION_AMOUNT) VALUES($1,$2,floor($3))";
         var values = [donation.projectID, donation.userID, donation.amount];
 
 		var query = client.query(sql, values, function(err, result) {
@@ -99,7 +99,7 @@ function insertDonation(donation, callback){
         });
 
         //Now update the project to reflect the added donation
-        var sql = "UPDATE PROJECTS SET CURRENT_DONATED_AMOUNT = CURRENT_DONATED_AMOUNT + $1 WHERE PROJECT_ID = $2 RETURNING *";
+        var sql = "UPDATE PROJECTS SET CURRENT_DONATED_AMOUNT = CURRENT_DONATED_AMOUNT + floor($1) WHERE PROJECT_ID = $2 RETURNING *";
         var values = [donation.amount, donation.projectID];
         var query = client.query(sql, values, function(err, result) {
             //check for error, if the transaction is good commit to DB

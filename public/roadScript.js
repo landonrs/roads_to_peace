@@ -39,7 +39,7 @@ $('#donation-form').on('submit', function(event){
             if (response == "ERROR"){
                 pDisplay.html("Error, your donation amount was invalid");
             } else{
-                pDisplay.html("You donated $" + donation.amount + " to " + response.project[0].project_name);
+                pDisplay.html("You donated $" + Math.floor(donation.amount) + " to " + response.project[0].project_name);
             }
         }
     });
