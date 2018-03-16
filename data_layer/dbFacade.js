@@ -18,7 +18,7 @@ function getProjectInfo(id, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        //ssl: true,
+        ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -75,7 +75,7 @@ function insertDonation(donation, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        //ssl: true,
+        ssl: true,
       });
     client.connect(function(err) {
 		if (err) {
@@ -131,5 +131,53 @@ function insertDonation(donation, callback){
     })
 }
 
-module.exports = {getProjects: getProjects, addDonation: addDonation};
+function getUserDonations(req, res){
+    console.log("connecting to DB");
+    var id = req.params.id;
+    getDonationInfo(id, function(error, result){
+        //console.log(result);
+        res.send({ userHistory: result });
+    });
+}
+
+function getDonationInfo(id, callback){
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL || conString,
+        //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
+        ssl: true,
+      });
+	client.connect(function(err) {
+		if (err) {
+			console.log("Error connecting to DB: ")
+			console.log(err);
+			callback(err, null);
+		}
+
+        var sql = "SELECT PROJECT_NAME, DONATION_AMOUNT, to_char(DONATION_DATE, 'DD-Mon-YYYY') AS DONATION_DATE " + 
+                    "from PROJECT_CONTRIBUTORS pc JOIN PROJECTS p ON p.project_id = pc.project_id " +
+                    "WHERE USER_ID =$1";
+        var values = [id];
+
+		var query = client.query(sql, values, function(err, result) {
+        // we are now done getting the data from the DB, disconnect the client
+        client.end(function(err) {
+            if (err) throw err;
+            
+            if (err) {
+                console.log("Error in query: ")
+                console.log(err);
+                callback(err, null);
+            }
+
+            console.log("found results");
+
+            // call whatever function the person that called us wanted, giving it
+            // the results that we have been compiling
+            callback(null, result.rows);
+            });
+        });
+    })
+}
+
+module.exports = {getProjects: getProjects, addDonation: addDonation, getUserDonations: getUserDonations};
 

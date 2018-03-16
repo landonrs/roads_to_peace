@@ -1,3 +1,4 @@
+// get project info
 $(function() {
     // GET/READ
     console.log("clicked button!!!");
@@ -16,7 +17,7 @@ $(function() {
             })
 });
 
-
+// add donation to project
 $('#donation-form').on('submit', function(event){
     event.preventDefault();
 
@@ -38,4 +39,23 @@ $('#donation-form').on('submit', function(event){
             pDisplay.html("You donated $" + donation.amount + " to " + response.project[0].project_name);
         }
     });
+});
+
+// get donation history
+$(function() {
+    // GET/READ
+    console.log("clicked button!!!");
+    $('#donation-history').on('click', function(){
+        $.ajax({
+            url: '/users/1',
+            contentType: 'application/json',
+            success: function(response){
+                var pDisplay = $('#project-display');
+                console.log(pDisplay);
+                console.log(JSON.stringify(response.userHistory));
+                pDisplay.html('');
+                pDisplay.html(JSON.stringify(response.userHistory));
+            }  
+                });
+            })
 });

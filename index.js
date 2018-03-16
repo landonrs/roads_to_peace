@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var path = require("path");
-var dbFacade = require('./dbFacade.js');
+var dbFacade = require('./data_layer/dbFacade.js');
 
 var PORT = process.env.PORT || 3000;
 
@@ -10,6 +10,7 @@ app
 .use(express.static(path.join(__dirname)))
 .use(bodyParser.json())
 .get('/projects/:id', dbFacade.getProjects)
+.get('/users/:id', dbFacade.getUserDonations)
 .post('/donate', dbFacade.addDonation)
 .put('/products/:id', function(req, res){
     var id = req.params.id;
