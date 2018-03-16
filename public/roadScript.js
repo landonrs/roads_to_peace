@@ -33,10 +33,14 @@ $('#donation-form').on('submit', function(event){
         contentType: 'application/json',
         data: JSON.stringify({ amount: donation.amount, projectID: donation.projectID, userID: donation.userID }),
         success: function(response){
-            console.log(response);
+            console.log("response is " + response);
             var pDisplay = $('#project-display');
             pDisplay.html('');
-            pDisplay.html("You donated $" + donation.amount + " to " + response.project[0].project_name);
+            if (response == "ERROR"){
+                pDisplay.html("Error, your donation amount was invalid");
+            } else{
+                pDisplay.html("You donated $" + donation.amount + " to " + response.project[0].project_name);
+            }
         }
     });
 });

@@ -55,20 +55,22 @@ function addDonation(req, res){
     var userID = req.body.userID;
     var projectID = req.body.projectID;
     var amount = req.body.amount;
+    if (isNaN(amount)) {
+        console.log("user did not enter number");
+        res.send("ERROR");
+    } else {
 
-    var donation = {
-        userID: userID,
-        projectID: projectID,
-        amount: amount
+        var donation = {
+            userID: userID,
+            projectID: projectID,
+            amount: amount
+        }
+
+        insertDonation(donation, function(err, updateDetails){
+
+            res.send({ project: updateDetails });
+        })
     }
-
-    insertDonation(donation, function(err, updateDetails){
-
-        res.send({ project: updateDetails });
-    })
-
-
-
 }
 
 function insertDonation(donation, callback){
