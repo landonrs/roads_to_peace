@@ -98,6 +98,11 @@ margin: auto;
     z-index: -1;
     
     display: block;
+    
+    filter:  sepia(100%) hue-rotate(145deg);
+  }
+  
+  body{
     background-image: url('/bg-img.jpg');
     width: 100%;
     height: 100%;
@@ -106,7 +111,6 @@ margin: auto;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    filter:  sepia(100%) hue-rotate(145deg);
   }
 
   .well {
