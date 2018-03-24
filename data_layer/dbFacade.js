@@ -3,13 +3,57 @@ const { Client } = require('pg');
 var bodyParser = require("body-parser");
 
 
+function displayProjectPage(req, res){
 
-function getProjects(req, res){
+    getAllProjects(function(error, result){
+        console.log(result);
+        res.send({ projects: result });
+    })
+
+}
+
+function getAllProjects(callback){
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL || conString,
+        //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
+        //ssl: true,
+      });
+	client.connect(function(err) {
+		if (err) {
+			console.log("Error connecting to DB: ")
+			console.log(err);
+			callback(err, null);
+		}
+
+        var sql = "SELECT * from PROJECTS";
+
+		var query = client.query(sql, function(err, result) {
+        // we are now done getting the data from the DB, disconnect the client
+        client.end(function(err) {
+            if (err) throw err;
+            
+            if (err) {
+                console.log("Error in query: ")
+                console.log(err);
+                callback(err, null);
+            }
+
+            console.log("Client disconnecting");
+
+            // call whatever function the person that called us wanted, giving it
+            // the results that we have been compiling
+            callback(null, result.rows);
+            });
+        });
+    })
+};
+
+function getProject(req, res){
     console.log("connecting to DB");
     var id = req.params.id;
     getProjectInfo(id, function(error, result){
-        //console.log(result);
-        res.send({ projects: result });
+         //console.log(result);
+         res.send({ projects: result });
     })
 	
 }
@@ -18,7 +62,7 @@ function getProjectInfo(id, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        ssl: true,
+        //ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -146,7 +190,7 @@ function getDonationInfo(id, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        ssl: true,
+        //ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -181,5 +225,150 @@ function getDonationInfo(id, callback){
     })
 }
 
-module.exports = {getProjects: getProjects, addDonation: addDonation, getUserDonations: getUserDonations};
+function logInUser(req, res){
+    //checking session variable
+    console.log(req.session.userID);
+    var user = {
+        username: req.body.username,
+        password: req.body.password
+    }
+
+    checkLogIn(user, function(err, result){
+        if(err){
+            res.send("ERROR");
+        }
+        else{
+            req.session.userID = result[0].user_id;
+            req.session.signedIn = true;
+            console.log(result[0]);
+            res.send({user: result})
+        }
+    })
+}
+
+function checkLogIn(user, callback){
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL || conString,
+        //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
+        //ssl: true,
+      });
+	client.connect(function(err) {
+		if (err) {
+			console.log("Error connecting to DB: ")
+			console.log(err);
+			callback(err, null);
+        }
+        console.log(user.username);
+        console.log(user.password);
+
+        var sql = "SELECT USER_ID FROM USERS WHERE USERNAME = $1 and password = $2";
+        var values = [user.username, user.password];
+
+		var query = client.query(sql, values, function(err, result) {
+        // we are now done getting the data from the DB, disconnect the client
+        client.end(function(err) {
+            if (err) throw err;
+            
+            if (err) {
+                console.log("Error in query: ")
+                console.log(err);
+                callback(err, null);
+            }
+
+            console.log(result);
+
+            // if no user was returned, send an error
+            if (result.rowCount == 0){
+                callback("NO RESULT", null)
+            }
+            else{
+                callback(null, result.rows);
+            }
+            });
+        });
+    })
+}
+
+function addUser(req, res){
+    console.log(req.session.userID);
+    var user = {
+        username: req.body.username,
+        password: req.body.password
+    }
+
+    checkUsername(user, function(err, result){
+        if(err){
+            res.send("ERROR");
+        }
+        else{
+            req.session.userID = result[0].user_id
+            console.log(result[0]);
+            res.send({user: result})
+        }
+    })
+}
+
+function checkUsername(user, callback){
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL || conString,
+        //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
+        //ssl: true,
+      });
+	client.connect(function(err) {
+		if (err) {
+			console.log("Error connecting to DB: ")
+			console.log(err);
+			callback(err, null);
+        }
+        console.log(user.username);
+        console.log(user.password);
+
+        var sql = "SELECT USER_ID FROM USERS WHERE USERNAME = $1";
+        var values = [user.username];
+
+		var query = client.query(sql, values, function(err, result) {
+            if (err || result.rowCount != 0) {
+                console.log("Error in query: Username exists")
+                console.log(err);
+                client.end();
+                callback("ERROR", null);
+            }
+        });
+
+        //Now insert the user into the DB
+        var sql = "INSERT INTO USERS (username, password) VALUES($1, $2) RETURNING *";
+        var values = [user.username, user.password];
+        var query = client.query(sql, values, function(err, result) {
+            //check for error, if the transaction is good commit to DB
+            if(err){
+                console.log(err);
+            } 
+            else {
+                client.query('COMMIT', (err) => {
+                if (err) {
+                  console.error('Error committing transaction', err.stack)
+                }
+                // we are now done inserting into the DB, disconnect the client
+                client.end(function(err) {
+                    if (err) {
+                        console.log(err.stack)
+                    } else {
+                        console.log("diconnecting from DB!");
+                    }
+
+                    console.log("inserted user: " + JSON.stringify(result.rows));
+
+                    // call whatever function the person that called us wanted, giving it
+                    // the results that we have been compiling
+                    callback(null, result.rows);
+                });
+              })
+            }
+		});
+});
+}
+
+
+module.exports = {getProject: getProject, addDonation: addDonation, getUserDonations: getUserDonations, 
+    displayProjectPage: displayProjectPage, logInUser: logInUser, addUser: addUser};
 

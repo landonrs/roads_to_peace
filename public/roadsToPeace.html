@@ -5,19 +5,163 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Roads to Peace</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="roadCss.css">
 </head>
 <body>
-    <h1>Roads to Peace</h1>
-    <button id="project-button">View Project Info</button>
-    <form id="donation-form">
-        <input type="text" id="amount">
-        <button>Donate to Project</button>
-    </form><br>
-    <button id="donation-history">View your donations history</button>
-    <p id="project-display"></p>
-    
+    <div class="well">   
+        <!-- Sign in Modal -->
+            <div id="signIn-modal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                
+                    <!-- Modal content-->
+                    <div class="modal-content" style="text-align: center;">
+                        <div class="modal-header">
+                        <h4 class="modal-title">Sign In:</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="signIn-form">
+                                    <label>Username:</label><br>
+                                    <input type="text" id="SI-username"><br>
+                                    <label>Password:</label><br>
+                                    <input type="password" id="SI-password"><br>
+                                    <button>Log In</button>
+                            </form><br>
+                            <label id="sign-in-error" style="color:red; display:none;">Invalid Username or password</label>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sign up Modal -->
+            <div id="signUp-modal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                
+                    <!-- Modal content-->
+                    <div class="modal-content" style="text-align: center;">
+                        <div class="modal-header">
+                        <h4 class="modal-title">Sign up form:</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="signUp-form">
+                                    <label>Create username:</label><br>
+                                    <input type="text" id="SU-username"><br>
+                                    <label>Create password:</label><br>
+                                    <input type="password" id="SU-password"><br>
+                                    <button>create account</button>
+                            </form><br>
+                            <label id="sign-up-error" style="color:red; display:none;">That username already exists. Please use another name</label>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <script src="jquery.js"></script>
+        <div id="navbar">
+            <a href="/"><img id="logo-img" src="roads_to_peace_logo.png"><a>
+            <button id="sign-in" class="sign-in-label btn btn-primary" data-toggle="modal" data-target="#signIn-modal">sign-in</button>
+            <button id="sign-up" class="sign-in-label btn btn-primary" data-toggle="modal" data-target="#signUp-modal">sign-up</button>
+            <button id="donation-hist-disp" class="sign-in-label btn btn-primary" style="display: none;">view your donation history</button>
+            <h4 id="user-greeting" class="sign-in-label"></h4>
+        
+        </div>
+        
+        <!-- This div holds the elements for the home page -->
+        <div id="home-page" class="page" >
+            <h1 id="home-welcome">Welcome to Roads to Peace</h1><br>
+            <h4>This is a site where you can donate to projects all around the 
+                world to improve the lives of people everywhere</h4><br>
+            <button id="cause-button" class="btn btn-primary projects-display-button">Find a cause</button>
+        </div>
+
+        <!-- This div holds stuff for the projects display page -->
+        <div id="projects-display-page" class="page" style="display: none;">
+            <h1 id="projects-header">Find a cause to help</h1>
+            <h4>We're working with people all around the world to improve the quality of life for their communities. 
+                Find a project that you can support!
+            </h4>
+            <h2 id="current-projects-label">Current Projects</h2>
+            <h3 class="project-title" id="project-1-title"></h3>
+            <img class="project-image" id="project-1-img">
+            <input type="hidden" id="project-1-id" /> 
+            <button class="project-display-button btn btn-primary">view project page</button>
+        </div>
+
+        <!-- this div is displayed when a single project is opened to the user -->
+        <div id="project-donation-page" class="page" style="display: none;">
+            <h1 id="project-title">Test Project</h1>
+            <img id="project-img">
+            <div id="donation-info">
+            <h3 id="goal-display">Goal: $</h3>
+            
+                <h4>Current Donations</h4>
+                <div class="progress" style="width: 50%;">
+                    <div id="bar-fillup" class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 id="current-amount">$</h4>
+                <button data-toggle="modal" data-target="#donation-modal" class="btn btn-success">Support this project</button>
+                <!-- Modal -->
+                <div id="donation-modal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title">Enter donation amount:</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="donation-form">
+                                    <input type="text" id="amount">
+                                    <button>Donate to Project</button>
+                            </form><br>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="project-description">
+                <p id="project-text">Blah Blah Blah project description here....</p>
+                <p id="project-display"></p>
+            </div>
+            <button id="redirect-project-button" class="btn btn-primary projects-display-button">Find other projects</button>
+        </div>
+        </div>
+
+        <!-- Div for displaying the user's donation history -->
+        <div id="donation-history-page" class="page" style="display: none;">
+            <h1>Your Donations</h1>
+
+        </div>
+    </div>
+
+
+    
+    <!-- <div class="data-layer test code" style="display:none;">
+        <button id="project-button">View Project Info</button>
+        <form id="donation-form">
+            <input type="text" id="amount">
+            <button>Donate to Project</button>
+        </form><br>
+        <button id="donation-history">View your donations history</button>
+        <div id="test-div">
+            <p id="project-test-display"></p>
+            <p>This line should disappear too!</p>
+        </div>
+    </div> -->
+
+    <!-- <script src="jquery.js"></script> -->
     <script src="roadScript.js"></script>
 </body>
 </html>

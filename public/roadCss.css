@@ -1,0 +1,125 @@
+.sign-in-label{
+    float:right;
+    position: relative;
+    margin: 1%;
+    padding: 1%;
+
+}
+
+/* styling for home page*/
+#home-page{
+    text-align: center;
+    height:500px;
+}
+
+#home-page h4{
+    margin:auto;
+    position: relative;
+    top: 20%;
+
+}
+
+#logo-img {
+   height: 200px;
+   width: 320px; 
+}
+
+#home-welcome{
+    position: absolute;
+    top:10%;
+    left:35%;
+}
+
+#cause-button{
+    margin: auto;
+    display:block;
+    position: relative;
+    top:23%;
+}
+
+/* styling for main projects display page */
+#projects-display-page{
+    text-align: center;
+    position: relative;
+}
+
+#projects-header{
+position: relative;
+top: -50px;
+margin: auto;
+
+}
+
+#project-display-page h4{
+    position: relative;
+    display: block;
+    top: -50px; 
+    margin-bottom:150px;
+}
+
+#current-projects-label{
+    position: relative;
+    margin-top: 50px;
+}
+
+#project-img{
+    width:50%;
+    margin-left: 10%;
+    
+}
+
+#project-title{
+    margin-left: 10%;
+}
+
+#donation-info{
+    float: right;
+    width: 30%;
+    margin-left: 1%;
+    margin-right:5%;
+
+}
+
+#project-description{
+    margin-top:50px;
+    background-color: rgba(255, 255, 255, 0.164); 
+}
+
+#redirect-project-button{
+    margin-top:100px;
+    margin-left: auto;
+}
+
+.well:before {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    
+    display: block;
+    background-image: url('bg-img.jpg');
+    width: 100%;
+    height: 100%;
+    
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    filter:  sepia(100%) hue-rotate(145deg);
+  }
+
+  .well {
+    z-index: 0;
+    color:rgb(255, 255, 255);
+    text-shadow: 2px 2px 4px #000000;
+    height: 1000px;
+  }
+
+  .modal{
+      color:black;
+      text-shadow: none;
+  }
+
+
+
