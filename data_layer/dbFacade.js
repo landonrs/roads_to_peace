@@ -6,7 +6,7 @@ var bodyParser = require("body-parser");
 function displayProjectPage(req, res){
 
     getAllProjects(function(error, result){
-        console.log(result);
+        // console.log(result);
         res.send({ projects: result });
     })
 
@@ -16,7 +16,7 @@ function getAllProjects(callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        ssl: true,
+        //ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -62,7 +62,7 @@ function getProjectInfo(id, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        ssl: true,
+        //ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -121,7 +121,7 @@ function insertDonation(donation, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        ssl: true,
+        //ssl: true,
       });
     client.connect(function(err) {
 		if (err) {
@@ -190,7 +190,7 @@ function getDonationInfo(id, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        ssl: true,
+        //ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -239,8 +239,8 @@ function logInUser(req, res){
         }
         else{
             req.session.userID = result[0].user_id;
-            req.session.signedIn = true;
-            console.log(result[0]);
+            req.session.username = result[0].username;
+            //console.log(result[0]);
             res.send({user: result})
         }
     })
@@ -250,18 +250,18 @@ function checkLogIn(user, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        ssl: true,
+        //ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
-			console.log("Error connecting to DB: ")
+			//console.log("Error connecting to DB: ")
 			console.log(err);
 			callback(err, null);
         }
-        console.log(user.username);
-        console.log(user.password);
+        //console.log(user.username);
+        //console.log(user.password);
 
-        var sql = "SELECT USER_ID FROM USERS WHERE USERNAME = $1 and password = $2";
+        var sql = "SELECT USER_ID, USERNAME FROM USERS WHERE USERNAME = $1 and password = $2";
         var values = [user.username, user.password];
 
 		var query = client.query(sql, values, function(err, result) {
@@ -275,7 +275,7 @@ function checkLogIn(user, callback){
                 callback(err, null);
             }
 
-            console.log(result);
+            //console.log(result);
 
             // if no user was returned, send an error
             if (result.rowCount == 0){
@@ -290,7 +290,7 @@ function checkLogIn(user, callback){
 }
 
 function addUser(req, res){
-    console.log(req.session.userID);
+    //console.log(req.session.userID);
     var user = {
         username: req.body.username,
         password: req.body.password
@@ -302,7 +302,7 @@ function addUser(req, res){
         }
         else{
             req.session.userID = result[0].user_id
-            console.log(result[0]);
+            //console.log(result[0]);
             res.send({user: result})
         }
     })
@@ -312,7 +312,7 @@ function checkUsername(user, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        ssl: true,
+        //ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -320,8 +320,8 @@ function checkUsername(user, callback){
 			console.log(err);
 			callback(err, null);
         }
-        console.log(user.username);
-        console.log(user.password);
+        //console.log(user.username);
+        //console.log(user.password);
 
         var sql = "SELECT USER_ID FROM USERS WHERE USERNAME = $1";
         var values = [user.username];

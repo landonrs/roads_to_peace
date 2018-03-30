@@ -62,14 +62,28 @@ margin: auto;
     margin-top: 50px;
 }
 
+.project-image{
+    width:50%;
+    height:400px;
+    margin-left: 10%;
+}
+
 #project-img{
     width:50%;
+    height:350px;
     margin-left: 10%;
     
 }
 
+.project-title{
+    margin-top: 50px;
+}
+
+/* For the individual project display page*/
 #project-title{
     margin-left: 10%;
+    margin-top: 50px;
+
 }
 
 #donation-info{

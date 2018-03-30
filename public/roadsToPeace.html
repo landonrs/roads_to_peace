@@ -70,7 +70,7 @@
             <a href="/"><img id="logo-img" src="roads_to_peace_logo.png"><a>
             <button id="sign-in" class="sign-in-label btn btn-primary" data-toggle="modal" data-target="#signIn-modal">sign-in</button>
             <button id="sign-up" class="sign-in-label btn btn-primary" data-toggle="modal" data-target="#signUp-modal">sign-up</button>
-            <button id="donation-hist-disp" class="sign-in-label btn btn-primary" style="display: none;">view your donation history</button>
+            <button id="donation-hist-disp" class="sign-in-label btn btn-primary" style="display: none;" value=-1>view your donation history</button>
             <h4 id="user-greeting" class="sign-in-label"></h4>
         
         </div>
@@ -92,12 +92,15 @@
             <h2 id="current-projects-label">Current Projects</h2>
             <h3 class="project-title" id="project-1-title"></h3>
             <img class="project-image" id="project-1-img">
-            <input type="hidden" id="project-1-id" /> 
-            <button class="project-display-button btn btn-primary">view project page</button>
+            <button class="project-display-button btn btn-primary" id="project-1-id" value=1>view project page</button>
+            <h3 class="project-title" id="project-2-title"></h3>
+            <img class="project-image" id="project-2-img">
+            <button class="project-display-button btn btn-primary" id="project-2-id" value=2>view project page</button>
         </div>
 
         <!-- this div is displayed when a single project is opened to the user -->
         <div id="project-donation-page" class="page" style="display: none;">
+            <input type="hidden" id='proj-id' value=0 />
             <h1 id="project-title">Test Project</h1>
             <img id="project-img">
             <div id="donation-info">
@@ -122,6 +125,7 @@
                         <div class="modal-body">
                             <form id="donation-form">
                                     <input type="text" id="amount">
+                                    <h5 id="donation-error" style="display:none; color:red;">You must sign in before donating</h5>
                                     <button>Donate to Project</button>
                             </form><br>
                         </div>
@@ -132,7 +136,7 @@
                 </div>
             </div>
             <div id="project-description">
-                <p id="project-text">Blah Blah Blah project description here....</p>
+                <p id="project-text"></p>
                 <p id="project-display"></p>
             </div>
             <button id="redirect-project-button" class="btn btn-primary projects-display-button">Find other projects</button>

@@ -3,17 +3,20 @@ $(function() {
     // GET/READ
     // console.log("clicked button!!!");
     $('.project-display-button').on('click', function(){
+        var projectId = $(this).val();
+        console.log(projectId);
         $.ajax({
-            url: '/projects/' + $('#project-1-id').val(),
+            url: '/projects/' + projectId,
             contentType: 'application/json',
             success: function(response){
                 var projectPage = $('#projects-display-page');
                 projectPage.hide();
                 var indProjectPage = $('#project-donation-page');
                 
-                console.log(JSON.stringify(response.projects[0]));
+                // console.log(JSON.stringify(response.projects[0]));
+                $('#proj-id').val(response.projects[0].project_id);
                 $('#project-title').html(response.projects[0].project_name);
-                $('#project-img').attr('src', 'test.jpg');
+                $('#project-img').attr('src', response.projects[0].image_url);
                 $('#goal-display').html('Goal: $'+ response.projects[0].target_goal);
                 $('#current-amount').html('$' + response.projects[0].current_donated_amount);
                 var percent = (response.projects[0].current_donated_amount / response.projects[0].target_goal) * 100
@@ -21,10 +24,8 @@ $(function() {
                 $('#bar-fillup').attr('style','width: '+ percent + '%');
                 $('#project-text').html(response.projects[0].description);
 
-                // pDisplay.html('');
-                // pDisplay.html(JSON.stringify(response.projects[0]));
-                //tDiv.hide(1000);
                 indProjectPage.show();
+                window.scrollTo(0, 0);
             }  
                 });
             })
@@ -33,11 +34,23 @@ $(function() {
 // add donation to project
 $('#donation-form').on('submit', function(event){
     event.preventDefault();
+    $('#donation-error').hide()
+
+
+    if($('#donation-hist-disp').val() == -1){
+        $('#donation-error').show();
+        return 0;
+    }
+    else if (isNaN($('#amount').val())){
+        $('#donation-error').html('Invalid number entered for amount!');
+        $('#donation-error').show();
+        return 0;
+    }
 
     var donation = {
         amount: $('#amount').val(),
-        userID: 1,
-        projectID: 1,
+        userID: $('#donation-hist-disp').val(),
+        projectID: $('#proj-id').val(),
     };
 
     $.ajax({
@@ -100,8 +113,12 @@ $(function() {
                 $('.page').hide();
                 var projectPage = $('#projects-display-page');
                 $("#project-1-title").html(response.projects[0].project_name);
-                $("#project-1-img").attr("src", "test.jpg");
+                $("#project-1-img").attr("src", response.projects[0].image_url);
                 $("#project-1-id").val(response.projects[0].project_id);
+                // insert project 2 data
+                $("#project-2-title").html(response.projects[1].project_name);
+                $("#project-2-img").attr("src", response.projects[1].image_url);
+                $("#project-2-id").val(response.projects[1].project_id);
                 projectPage.show();
                 window.scrollTo(0, 0);
             }  
@@ -174,3 +191,25 @@ $('#signUp-form').on('submit', function(event){
         }
     });
 });
+
+$(document).ready(function () {
+    $.ajax({
+        url: '/checkLogIn',
+        method: 'GET',
+        contentType: 'application/json',
+        success: function(response){
+            console.log("response is " + response);
+            if (response.login != null){
+                console.log("user is logged in: " + response.login)
+                // update the navbar to show the user name
+                $('#sign-in').hide();
+                $('#sign-up').hide();
+                $('#donation-hist-disp').val(response.user_id);
+                $('#donation-hist-disp').show();
+                $('#user-greeting').html("Welcome " + response.login);
+            } 
+            window.scrollTo(0, 0);
+        }
+    });
+
+  });
