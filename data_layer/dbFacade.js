@@ -16,7 +16,7 @@ function getAllProjects(callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        //ssl: true,
+        ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -62,7 +62,7 @@ function getProjectInfo(id, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        //ssl: true,
+        ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -121,7 +121,7 @@ function insertDonation(donation, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        //ssl: true,
+        ssl: true,
       });
     client.connect(function(err) {
 		if (err) {
@@ -190,7 +190,7 @@ function getDonationInfo(id, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        //ssl: true,
+        ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -250,7 +250,7 @@ function checkLogIn(user, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        //ssl: true,
+        ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
@@ -312,7 +312,7 @@ function checkUsername(user, callback){
     const client = new Client({
         connectionString: process.env.DATABASE_URL || conString,
         //UNCOMMENT THIS WHEN PUSHING TO HEROKU!
-        //ssl: true,
+        ssl: true,
       });
 	client.connect(function(err) {
 		if (err) {
