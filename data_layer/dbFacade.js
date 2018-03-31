@@ -301,7 +301,8 @@ function addUser(req, res){
             res.send("ERROR");
         }
         else{
-            req.session.userID = result[0].user_id
+            req.session.userID = result[0].user_id;
+            req.session.username = result[0].username;
             //console.log(result[0]);
             res.send({user: result})
         }
