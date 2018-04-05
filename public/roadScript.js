@@ -1,10 +1,10 @@
 // get project info
 $(function() {
     // GET/READ
-    // console.log("clicked button!!!");
+    // //console.log("clicked button!!!");
     $('.project-display-button').on('click', function(){
         var projectId = $(this).val();
-        console.log(projectId);
+        //console.log(projectId);
         $.ajax({
             url: '/projects/' + projectId,
             contentType: 'application/json',
@@ -13,7 +13,7 @@ $(function() {
                 projectPage.hide();
                 var indProjectPage = $('#project-donation-page');
                 
-                // console.log(JSON.stringify(response.projects[0]));
+                // //console.log(JSON.stringify(response.projects[0]));
                 $('#proj-id').val(response.projects[0].project_id);
                 $('#project-title').html(response.projects[0].project_name);
                 $('#project-img').attr('src', response.projects[0].image_url);
@@ -21,7 +21,7 @@ $(function() {
                 $('#current-amount').html('$' + response.projects[0].current_donated_amount);
                 $('#time-left').html(response.projects[0].time_left);
                 var percent = (response.projects[0].current_donated_amount / response.projects[0].target_goal) * 100
-                console.log(percent)
+                //console.log(percent)
                 $('#bar-fillup').attr('style','width: '+ percent + '%');
                 $('#project-text').html(response.projects[0].description);
 
@@ -61,7 +61,7 @@ $('#donation-form').on('submit', function(event){
         data: JSON.stringify({ amount: donation.amount, projectID: donation.projectID, userID: donation.userID }),
         success: function(response){
             $('#donation-modal').modal('toggle');
-            console.log("response is " + response);
+            //console.log("response is " + response);
             var pDisplay = $('#project-display');
             pDisplay.html('');
             if (response == "ERROR"){
@@ -73,7 +73,7 @@ $('#donation-form').on('submit', function(event){
             $('#current-amount').html('');
             $('#current-amount').append('$' + response.project[0].current_donated_amount);
             var percent = (response.project[0].current_donated_amount / response.project[0].target_goal) * 100;
-            console.log(percent)
+            //console.log(percent)
             $('#bar-fillup').attr('style','width: '+ percent + '%');
 
         }
@@ -89,9 +89,9 @@ $(function() {
             contentType: 'application/json',
             success: function(response){
                 $('.page').hide();
-                console.log(JSON.stringify(response.userHistory));
+                //console.log(JSON.stringify(response.userHistory));
                 if (response.userHistory[0] === undefined){   
-                    console.log("no donations!");
+                    //console.log("no donations!");
                 }
                 else{
                 $('#no-donation-error').hide();
@@ -117,7 +117,7 @@ $(function() {
 $(function() {
     // GET/READ
     $('.projects-display-button').on('click', function(){
-        console.log("clicked projects button!");
+        //console.log("clicked projects button!");
         $.ajax({
             url: '/projects/main',
             contentType: 'application/json',
@@ -153,7 +153,7 @@ $('#signIn-form').on('submit', function(event){
         contentType: 'application/json',
         data: JSON.stringify({ username: user.username, password: user.password }),
         success: function(response){
-            console.log("response is " + response);
+            //console.log("response is " + response);
             if (response == "ERROR"){
                 $('#sign-in-error').show();
             } else{
@@ -162,8 +162,10 @@ $('#signIn-form').on('submit', function(event){
                 $('#sign-in').hide();
                 $('#sign-up').hide();
                 $('#donation-hist-disp').val(response.user[0].user_id);
+                $('#sign-out').show();
                 $('#donation-hist-disp').show();
                 $('#user-greeting').html("Welcome " + user.username);
+                $('#user-greeting').show();
             }
             
 
@@ -186,9 +188,9 @@ $('#signUp-form').on('submit', function(event){
         contentType: 'application/json',
         data: JSON.stringify({ username: user.username, password: user.password }),
         success: function(response){
-            console.log("response is " + response);
+            //console.log("response is " + response);
             if (response == "ERROR"){
-                $('#sign-up-error').show();
+                //console.log("error signing out");
             } else{
                 $('#signUp-modal').modal('toggle');
                 // update the navbar to show the user name
@@ -196,7 +198,9 @@ $('#signUp-form').on('submit', function(event){
                 $('#sign-up').hide();
                 $('#donation-hist-disp').val(response.user[0].user_id);
                 $('#donation-hist-disp').show();
+                $('#sign-out').show();
                 $('#user-greeting').html("Welcome " + user.username);
+                $('#user-greeting').show();
             }
             
 
@@ -204,21 +208,49 @@ $('#signUp-form').on('submit', function(event){
     });
 });
 
+// Sign out handler
+$('#sign-out').on('click', function(){
+   
+    $.ajax({
+        url: '/signout',
+        method: 'POST',
+        contentType: 'application/json',
+        success: function(response){
+            //console.log("response is " + response);
+            if (response == "ERROR"){
+                $('#sign-in-error').show();
+            } else{
+                // remove user name from navbar
+                $('#donation-hist-disp').val(-1);
+                $('#sign-out').hide();
+                $('#donation-hist-disp').hide();
+                $('#user-greeting').hide();
+                $('#sign-in').show();
+                $('#sign-up').show();
+            }
+            
+
+        }
+    });
+});
+// every time the page is refreshed, check if the user is already logged in.
 $(document).ready(function () {
     $.ajax({
         url: '/checkLogIn',
         method: 'GET',
         contentType: 'application/json',
         success: function(response){
-            console.log("response is " + response);
+            //console.log("response is " + response);
             if (response.login != null){
-                console.log("user is logged in: " + response.login)
+                //console.log("user is logged in: " + response.login)
                 // update the navbar to show the user name
                 $('#sign-in').hide();
                 $('#sign-up').hide();
                 $('#donation-hist-disp').val(response.user_id);
                 $('#donation-hist-disp').show();
+                $('#sign-out').show();
                 $('#user-greeting').html("Welcome " + response.login);
+                $('#user-greeting').show();
             } 
             window.scrollTo(0, 0);
         }

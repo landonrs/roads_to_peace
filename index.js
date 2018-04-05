@@ -17,6 +17,7 @@ app
 .post('/donate', dbFacade.addDonation)
 .post('/login', dbFacade.logInUser)
 .post('/addUser', dbFacade.addUser)
+.post('/signout', signOut)
 .get('/', (req, res) =>{
     res.redirect('/roadsToPeace.html');
 })
@@ -25,6 +26,11 @@ app
     console.log("server listening on port " + PORT);
 });
 
+
+function signOut(req, res){
+    req.session.destroy();
+    res.send({success: true})
+}
 
 function checkLogIn(req, res, next){
 
