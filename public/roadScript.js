@@ -19,6 +19,7 @@ $(function() {
                 $('#project-img').attr('src', response.projects[0].image_url);
                 $('#goal-display').html('Goal: $'+ response.projects[0].target_goal);
                 $('#current-amount').html('$' + response.projects[0].current_donated_amount);
+                $('#time-left').html(response.projects[0].time_left);
                 var percent = (response.projects[0].current_donated_amount / response.projects[0].target_goal) * 100
                 console.log(percent)
                 $('#bar-fillup').attr('style','width: '+ percent + '%');
@@ -89,13 +90,23 @@ $(function() {
             success: function(response){
                 $('.page').hide();
                 console.log(JSON.stringify(response.userHistory));
+                if (response.userHistory[0] === undefined){   
+                    console.log("no donations!");
+                }
+                else{
+                $('#no-donation-error').hide();
+                $('#donation-redirect-button').hide();
+                $('#donation-history-page').append("<h1>Your Donations</h1>");
                 response.userHistory.forEach(element => {
-                    $('#donation-history-page').append("<h5>Project: " + element.project_name + "</h5><br>");
-                    $('#donation-history-page').append("<h5>Donation Amount: $" + element.donation_amount + "</h5><br>");
-                    $('#donation-history-page').append("<h5>Donation Date: " + element.donation_date + "</h5><br>");
+                    $('#donation-history-page').append("<div class='rounded donation-history-box'>" +
+                    "<h5>Project: " + element.project_name + "</h5><br>" +
+                    "<h5>Donation Amount: $" + element.donation_amount + "</h5><br>" + 
+                    "<h5>Donation Date: " + element.donation_date + "</h5><br>" +
+                    "</div>");
                     
-
-                });
+                
+                })
+            };
                 $('#donation-history-page').show()
             }  
                 });
@@ -106,6 +117,7 @@ $(function() {
 $(function() {
     // GET/READ
     $('.projects-display-button').on('click', function(){
+        console.log("clicked projects button!");
         $.ajax({
             url: '/projects/main',
             contentType: 'application/json',

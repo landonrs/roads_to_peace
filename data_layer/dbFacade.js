@@ -71,7 +71,9 @@ function getProjectInfo(id, callback){
 			callback(err, null);
 		}
 
-        var sql = "SELECT * from PROJECTS WHERE PROJECT_ID =$1";
+        var sql = "SELECT project_id, project_name, image_url, target_goal, current_donated_amount," + 
+        "description, to_char(end_date - current_timestamp, 'DD') || ' days ' || to_char(end_date - current_timestamp, 'HH24') ||" + 
+        "' hours left to support this project' as time_left from projects WHERE PROJECT_ID =$1";
         var values = [id];
 
 		var query = client.query(sql, values, function(err, result) {
@@ -85,7 +87,7 @@ function getProjectInfo(id, callback){
                 callback(err, null);
             }
 
-            console.log("Client disconnecting");
+            //console.log("Client disconnecting");
 
             // call whatever function the person that called us wanted, giving it
             // the results that we have been compiling
@@ -100,7 +102,7 @@ function addDonation(req, res){
     var projectID = req.body.projectID;
     var amount = req.body.amount;
     if (isNaN(amount)) {
-        console.log("user did not enter number");
+        //console.log("user did not enter number");
         res.send("ERROR");
     } else {
 
@@ -160,10 +162,10 @@ function insertDonation(donation, callback){
                     if (err) {
                         console.log(err.stack)
                     } else {
-                        console.log("diconnecting from DB!");
+                        //console.log("diconnecting from DB!");
                     }
 
-                    console.log("updated project: " + JSON.stringify(result.rows));
+                    //console.log("updated project: " + JSON.stringify(result.rows));
 
                     // call whatever function the person that called us wanted, giving it
                     // the results that we have been compiling
@@ -178,7 +180,7 @@ function insertDonation(donation, callback){
 }
 
 function getUserDonations(req, res){
-    console.log("connecting to DB");
+    //console.log("connecting to DB");
     var id = req.params.id;
     getDonationInfo(id, function(error, result){
         //console.log(result);
@@ -215,7 +217,7 @@ function getDonationInfo(id, callback){
                 callback(err, null);
             }
 
-            console.log("found results");
+            //console.log("found results");
 
             // call whatever function the person that called us wanted, giving it
             // the results that we have been compiling
@@ -227,7 +229,7 @@ function getDonationInfo(id, callback){
 
 function logInUser(req, res){
     //checking session variable
-    console.log(req.session.userID);
+    //console.log(req.session.userID);
     var user = {
         username: req.body.username,
         password: req.body.password
@@ -354,10 +356,10 @@ function checkUsername(user, callback){
                     if (err) {
                         console.log(err.stack)
                     } else {
-                        console.log("diconnecting from DB!");
+                        //console.log("diconnecting from DB!");
                     }
 
-                    console.log("inserted user: " + JSON.stringify(result.rows));
+                    //console.log("inserted user: " + JSON.stringify(result.rows));
 
                     // call whatever function the person that called us wanted, giving it
                     // the results that we have been compiling
