@@ -24,7 +24,7 @@ $(function() {
                 //console.log(percent)
                 $('#bar-fillup').attr('style','width: '+ percent + '%');
                 $('#project-text').html(response.projects[0].description);
-
+                $('#project-display').html('');
                 indProjectPage.show();
                 window.scrollTo(0, 0);
             }  
